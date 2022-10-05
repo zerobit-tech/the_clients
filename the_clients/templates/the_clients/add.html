@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% load i18n %}
+
+{% block head_title %}{% trans "Create new Client" %}{% endblock %}
+
+{% block content %}
+{% load crispy_forms_tags %}
+
+
+<div class="container-fluid">
+    <!-- LOGIN -->
+    <div class="row mt-2">
+        <div class="col">
+            <div class="card">
+                <div class="card-header"><Strong>{% trans "Create new Client" %}</Strong></div>
+
+                <div class="card-body">
+                    <form method="POST" onsubmit="show_processing_model()" action="" class="">
+                        {% csrf_token %}
+                        {{ add_form|crispy }}
+
+
+                        <div class="row">
+                            <div class="col">
+                                <button class="btn btn-primary px-4" type="submit">{% trans "Create" %}
+                                </button>
+                            </div>
+
+                        </div>
+
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% load i18n %}
+
+{% block head_title %}{% trans "Update Client" %}{% endblock %}
+
+{% block content %}
+{% load crispy_forms_tags %}
+
+
+<div class="container-fluid">
+    <!-- LOGIN -->
+    <div class="row mt-2">
+        <div class="col">
+            <div class="card">
+                <div class="card-header"><Strong>{% trans "Client"  %} "{{client.user}}"</Strong></div>
+
+                <div class="card-body">
+                    <table class="table table-responsive-sm table-hover   mb-0 w-100 d-block d-md-table">
+                        <tbody>
+                          
+                            <tr>
+                                <th scope="row">{% trans "Active" %}</th>
+                                <td>{{client.active}}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">{% trans "Access token" %}</th>
+                                <td><textarea disabled rows="5" cols="100">{{client.token}}</textarea></td>
+                            </tr>
+                            {% comment %} <tr>
+                                <th scope="row">{% trans "Refresh Token" %}</th>
+                                <td><textarea disabled rows="5" cols="100">{{client.refresh_token}}</textarea></td>
+                            </tr> {% endcomment %}
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

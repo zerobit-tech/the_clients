@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+
+{% load i18n %}
+{% load static %}
+{% block head_title %}{% trans "Clients" %}{% endblock %}
+
+{% block content %}
+{% load crispy_forms_tags %}
+
+
+<div class="container-fluid">
+    <!-- LOGIN -->
+    <div class="row mt-2">
+        <div class="col">
+            <div class="card">
+                <div class="card-header"><Strong>{% trans 'Clients' %}</Strong> <a href = "{% url 'the_clients:add' %}" class="btn btn-primary float-right">{% trans '+ Add new' %}</a> </div>
+                <div class="card-body">
+                    <table class="table table-responsive-sm table-hover table-outline mb-0 w-100 d-block d-md-table">
+                        <thead class="thead-dark">
+                        <tr>
+                            <th  class="text-center">{% trans "User" %}</th>
+                            <th  class="text-center">{% trans "Is Active" %}</th>
+                            <th  class="text-center">{% trans "Options" %}</th>
+
+
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for client in clients %}
+                        <tr>
+                            <td  class="text-center">
+                                {{ client.user }}
+
+                            </td >
+                           
+                            <td  class="text-center">
+
+                                {% if client.active == True %}
+                                <svg class="c-icon c-icon-lg">
+                                    <use xlink:href="{{ STATIC_URL }}coreui/vendors/coreui/icons/svg/free.svg#cil-check-alt"></use>
+                                </svg>
+                                {% else %}
+                                <svg class="c-icon c-icon-lg">
+                                    <use xlink:href="{{ STATIC_URL }}coreui/vendors/coreui/icons/svg/free.svg#cil-x"></use>
+                                </svg>
+                                {% endif %}
+                            </td>
+
+                        
+
+                            <td  class="text-center">
+
+                                <a href = "{% url 'the_clients:update' pk=client.pk %}" class="">
+                                    {% trans "Update" %}
+                                </a> |
+                                <a href="{{client.get_absolute_url}}" class="">
+                                    {% trans "View" %} 
+                                </a>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr >
+
+                            <td  class="text-center" colspan="6"><p class="text-center">{% trans 'No Record Found.' %}</p></td>
+
+                        </tr>
+
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                    {% include "pagination.html" with paginator=clients %}
+
+
+
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+</div>
+{% endblock %}
