@@ -31,11 +31,8 @@ logger = logging.getLogger('ilogger')
 @change_password_required
 # @cache_page(60 * 10)
 def list_clients(request):
-    if hasattr(request,'search_value'):
-        clients_all = Client.objects.filter(
-            name__icontains=request.search_value.lower())
-    else:
-        clients_all = Client.objects.all()
+ 
+    clients_all = Client.objects.all()
 
     page_number, clients = get_paginator(request, clients_all)
 
@@ -56,7 +53,7 @@ def add_client(request):
         add_form = ClientForm(data=request.POST)
         if add_form.is_valid():
             add_form.save()
-            if hasattr(request,'capture_user_activity'):
+            if hasattr(request,'capture_user_activity') and request.capture_user_activity:
                 request.capture_user_activity.send(sender='the_client', request=request, target=add_form.instance,
                                               message="New client {} created".format(add_form.instance.user))
 
@@ -80,7 +77,7 @@ def update_client(request, pk):
     client_form = ClientUpdateForm(request.POST or None, instance=client)
     if request.method == "POST":
         if client_form.is_valid():
-            if hasattr(request,'capture_user_activity'):
+            if hasattr(request,'capture_user_activity') and request.capture_user_activity:
                 request.capture_user_activity.send(sender='the_client', request=request, target=client,
                                               message="Client {} updated".format(client.user))
             client_data = client_form.cleaned_data
