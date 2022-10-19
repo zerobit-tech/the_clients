@@ -19,7 +19,7 @@ from django.test.utils import override_settings
 @override_settings(   )
 class TestView(TestCase):
     multi_db = True
-    databases = {'default', 'pci'}
+    databases = {'default', }
     #--------------------------------------------------------------
     #
     #--------------------------------------------------------------   
