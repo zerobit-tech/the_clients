@@ -97,7 +97,7 @@ class Client(models.Model):
     #--------------------------------------------------------------
     #
     #--------------------------------------------------------------   
-    def set_meta(self,key,value):
+    def set_meta(self,key,value,description =None):
         if isinstance(value,int):
             self._set_int_meta(key,value)
 
@@ -117,19 +117,20 @@ class Client(models.Model):
     #--------------------------------------------------------------
     #
     #--------------------------------------------------------------   
-    def _set_string_meta(self,key,value):
+    def _set_string_meta(self,key,value,description =None):
         self._delete_meta(key)
 
         ClientMeta.objects.create(client=self, 
                     key =str(key).upper(),
-                    string_value = value
+                    string_value = value,
+                    description = description,
                     )
 
 
     #--------------------------------------------------------------
     #
     #--------------------------------------------------------------   
-    def _set_int_meta(self,key,value):
+    def _set_int_meta(self,key,value,description =None):
         self._delete_meta(key)
 
         int_value = int(value)
@@ -138,13 +139,14 @@ class Client(models.Model):
         ClientMeta.objects.create(client=self, 
                     key =str(key).upper(),
                     int_value = int_value,
+                    description = description,
                     value_type= ClientMetaType.INTEGER
                     )
     
     #--------------------------------------------------------------
     #
     #--------------------------------------------------------------   
-    def _set_decimal_meta(self,key,value):
+    def _set_decimal_meta(self,key,value,description =None):
         self._delete_meta(key)
 
         float_value = float(value)
@@ -153,17 +155,19 @@ class Client(models.Model):
         ClientMeta.objects.create(client=self, 
                     key =str(key).upper(),
                     decimal_value = float_value,
+                    description = description,
                     value_type= ClientMetaType.DECIMAL
                     )
     #--------------------------------------------------------------
     #
     #--------------------------------------------------------------   
-    def _set_boolean_meta(self,key,value):
+    def _set_boolean_meta(self,key,value,description =None):
         self._delete_meta(key)
         boolean_value = bool(value)
         ClientMeta.objects.create(client=self, 
                     key =str(key).upper(),
                     boolean_value = boolean_value,
+                    description = description,
                     value_type= ClientMetaType.BOOLEAN
                     )
 
@@ -174,15 +178,15 @@ class Client(models.Model):
     def get_meta_value(self,key, default = None):
         meta = self._get_meta(key)
         return_value = None
-        if meta:
-            if meta.value_type == str(ClientMetaType.STRING):
-                return_value= meta.string_value
+        if meta:           
             if meta.value_type == str(ClientMetaType.DECIMAL):
                 return_value= meta.decimal_value
-            if meta.value_type == str(ClientMetaType.BOOLEAN):
+            elif meta.value_type == str(ClientMetaType.BOOLEAN):
                 return_value= meta.boolean_value                            
-            if meta.value_type == str(ClientMetaType.INTEGER):
+            elif meta.value_type == str(ClientMetaType.INTEGER):
                 return_value= meta.int_value
+            else:
+                return_value= meta.string_value
 
         return default if return_value is None else return_value
 
@@ -197,10 +201,12 @@ class ClientMetaType(models.TextChoices):
 
 class ClientMeta(models.Model):
     client = models.ForeignKey(Client, on_delete = models.CASCADE,related_name="meta")
-    key = models.CharField(max_length = 20)
+    key = models.CharField(max_length = 50)
+    value_type = models.CharField(max_length = 1,choices=ClientMetaType.choices, default=ClientMetaType.STRING)
+    description = models.TextField(null=True,blank = True)
+
     string_value = models.TextField(null=True,blank = True)
     decimal_value = models.DecimalField(max_digits=11, decimal_places=5,null=True,blank = True)
     boolean_value = models.BooleanField(null=True,blank = True)
     int_value = models.IntegerField(null=True,blank = True)
-    value_type = models.CharField(max_length = 1,choices=ClientMetaType.choices, default=ClientMetaType.STRING)
 
