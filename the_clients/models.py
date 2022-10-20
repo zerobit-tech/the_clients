@@ -9,6 +9,8 @@ from django.conf import settings
 from django.contrib.auth.models import User
 from django.utils.translation import gettext_lazy as _
  
+from the_system.settings import _get_setting
+
 import logging
 logger = logging.getLogger('ilogger')
 # Create your models here.
@@ -187,6 +189,10 @@ class Client(models.Model):
                 return_value= meta.int_value
             else:
                 return_value= meta.string_value
+
+        # get the value from settings
+        if return_value is None:
+            return_value = _get_setting(str(key).upper())
 
         return default if return_value is None else return_value
 
